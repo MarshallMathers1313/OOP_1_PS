@@ -1,0 +1,152 @@
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+struct Student
+{
+	//ФИО
+	char name[20];
+	//оценки
+	int marks[3];
+};
+
+void input(Student& student, const char* name, int* marks)
+{
+	//только для char
+	strcpy_s(student.name, 20, name);
+	/*for (int i = 0; i < 20; i++)
+	{
+		student.name[i] = name[i];
+	}*/
+	for (int i = 0; i < 3; i++)
+	{
+		student.marks[i] = marks[i];
+	}
+}
+
+double averMark(Student& student)
+{
+	double sum = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		sum += student.marks[i];
+	}
+	return sum / 3;
+}
+
+void output(Student& student)
+{
+	cout << student.name << endl;
+	cout << "Оценки: ";
+	for (int i = 0; i < 3; i++)
+	{
+		cout << student.marks[i]<<" ";
+	}
+	cout << endl;
+	cout << "Средняя оценка: ";
+	cout<<fixed<<setprecision(2)<<averMark(student) << endl;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	const char* studentName = "Петров А.О";
+	int studentMarks[3] = { 4,4,3 };
+
+	Student student;
+
+	input(student, studentName, studentMarks);
+	output(student);
+
+	return 0;
+}
+
+========================================================
+Student.h
+
+#pragma once
+#include <iostream>
+using namespace std;
+//определеник класса
+class Student
+{
+private:
+	//ФИО
+	char name[21];
+	//оценки
+	int marks[3];
+public:
+	double getAver();
+
+	//доступ к полю name
+	void setName(const char* studentName);
+	const char* getName();
+
+	//доступ к полю marks
+	void setMarks(int* studentMarks);
+	int getMarks(int index);
+};
+
+Student.cpp
+
+#include <iostream>
+#include "Student.h"
+using namespace std;
+
+double Student::getAver()
+{
+	double sum = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		sum += marks[i];
+	}
+	return sum / 3;
+}
+
+void Student::setName(const char* studentName)
+{
+	strcpy_s(name, 20, studentName);
+}
+
+const char* Student::getName()
+{
+	return name;
+}
+
+void Student::setMarks(int* studentMarks)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		marks[i] = studentMarks[i];
+	}
+}
+
+int Student::getMarks(int index)
+{
+	return marks[index-1];
+}
+
+main.cpp
+
+#include <iostream>
+#include <iomanip>
+#include "Student.h"
+using namespace std;
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	//определение объекта
+	Student student;
+	int marks[3] = { 5,5,4 };
+	//присвоение значений объекту 
+	student.setName("Иванов А.И");
+	student.setMarks(marks);
+
+	//получение значений объекта
+	cout << "Средний балл " << student.getName()
+		<< " : " << fixed << setprecision(2)
+		<< student.getAver() << endl;
+
+	return 0;
+}
+========================================================
